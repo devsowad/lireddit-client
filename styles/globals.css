@@ -1,16 +1,57 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select {
+    @apply w-full bg-gray-200 border-b-2 border-gray-300 border-t-0 border-r-0 border-l-0 transition focus:ring-blue-600 dark:bg-gray-600 shadow-md focus:ring-0 rounded-t-md;
+  }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.btn {
+  @apply relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md focus:outline-none transition uppercase tracking-wide;
+}
+.btn:not(.loading) {
+  @apply focus:ring-2 focus:ring-offset-2 dark:ring-offset-gray-600;
 }
 
-* {
-  box-sizing: border-box;
+.btn.filled {
+  @apply text-white;
+}
+.btn.filled:not(.loading) {
+  @apply bg-blue-700 hover:bg-blue-800 focus:ring-blue-800 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-600;
+}
+.btn.filled.loading {
+  @apply bg-blue-400 cursor-default hover:bg-blue-400;
+}
+
+.btn.outline {
+  @apply text-blue-700 bg-blue-50 dark:bg-gray-600 dark:text-white;
+}
+.btn.outline:not(.loading) {
+  @apply hover:bg-blue-100 focus:ring-blue-200 dark:hover:bg-blue-400 dark:hover:bg-opacity-50 dark:focus:ring-blue-600;
+}
+.btn.outline.loading {
+  @apply cursor-default;
+}
+
+.btn:not(.loading) svg {
+  display: none;
+}
+.btn.loading .text {
+  opacity: 0;
 }
