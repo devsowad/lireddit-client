@@ -1,13 +1,11 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { client } from '../apollo-client';
-import { PostsDocument, PostsQuery } from '../generated/graphql';
 import Link from 'next/link';
+import { PostsDocument, usePostsQuery } from '../generated/graphql';
+import { client } from '../lib/graphql';
 
-interface Props {
-  data: PostsQuery | null;
-}
+const Home: NextPage<{}> = () => {
+  const { data } = usePostsQuery();
 
-const Home: NextPage<Props> = ({ data }) => {
   return (
     <div className=''>
       <div className='flex justify-between'>
@@ -26,7 +24,7 @@ const Home: NextPage<Props> = ({ data }) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { data } = await client.query({ query: PostsDocument });
+  await client.query({ query: PostsDocument });
 
-  return { props: { data } };
+  return { props: { initialApolloState: client.cache.extract() } };
 };

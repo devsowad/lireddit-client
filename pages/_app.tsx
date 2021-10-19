@@ -1,14 +1,14 @@
 import { ApolloProvider } from '@apollo/client';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { client } from '../apollo-client';
 import Header from '../components/Header/Header';
+import { useApollo } from '../lib/graphql';
 import '../styles/globals.css';
 
-// TODO: Setup apollo client right way
 // TODO: Create Post
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  const client = useApollo(pageProps.initialApolloState);
   return (
     <>
       <Head>
