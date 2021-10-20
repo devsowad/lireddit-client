@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import { SearchIcon, SunIcon } from '@heroicons/react/solid';
-import IconButton from '../IconButton';
 import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import { useLogoutMutation, useMeQuery } from '../../generated/graphql';
-import LoadingButton from '../LoadingButton';
 import { updateMe } from '../../graphql/update/updateMe';
+import IconButton from '../IconButton';
+import LoadingButton from '../LoadingButton';
 
 interface Props {
   //
@@ -47,7 +47,7 @@ const Header: React.FC<Props> = () => {
            ? 'shadow-lg sticky top-0 bg-white animate-slideIn'
            : 'animate-slideOut'
        } border-b dark:border-gray-600
-      `}
+          `}
     >
       <div className='flex items-center justify-between w-full container mx-auto py-2 px-2'>
         <div className='flex items-center space-x-2'>
@@ -70,7 +70,7 @@ const Header: React.FC<Props> = () => {
             <div className='flex space-x-3 items-center md:space-x-6'>
               {data?.me ? (
                 <>
-                  <p>{data?.me.username}</p>
+                  <p>{data.me.username}</p>
                   <LoadingButton
                     onClick={() => logout()}
                     loading={loggingOut}

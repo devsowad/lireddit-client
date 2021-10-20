@@ -17,9 +17,13 @@ const CreatePost: NextPage<{}> = () => {
 
   const [create, { loading }] = useCreatePostMutation({
     update(proxy, { data }) {
-      const cachePosts = proxy.readQuery({ query: PostsDocument });
-      console.log({ cachePosts });
-      console.log(data?.createPost);
+      const cachePosts = proxy.readQuery({
+        query: PostsDocument,
+      }) as { posts: any } | null;
+      if (cachePosts?.posts) {
+        const posts = [data?.createPost, ...cachePosts.posts];
+        proxy.writeQuery({ query: PostsDocument, data: { posts } });
+      }
       push('/');
     },
     onError,

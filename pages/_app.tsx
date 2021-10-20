@@ -5,8 +5,6 @@ import Header from '../components/Header/Header';
 import { useApollo } from '../lib/graphql';
 import '../styles/globals.css';
 
-// TODO: Create Post
-
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const client = useApollo(pageProps.initialApolloState);
   return (
@@ -16,7 +14,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <ApolloProvider client={client}>
         <Header />
-
         <main className='container px-4 mx-auto py-8'>
           <Component {...pageProps} />
         </main>
