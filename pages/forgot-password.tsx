@@ -5,7 +5,7 @@ import Alert from '../components/form/Alert';
 import FormWrapper from '../components/form/FormWrapper';
 import TextField from '../components/form/TextField';
 import LoadingButton from '../components/LoadingButton';
-import { useForgotPasswordMutation } from '../generated/graphql';
+import { useForgotPasswordMutation } from '../graphql/generated/graphql';
 
 interface Props {
   //

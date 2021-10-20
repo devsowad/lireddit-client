@@ -6,8 +6,9 @@ import FormWrapper from '../components/form/FormWrapper';
 import TextField from '../components/form/TextField';
 import useFormError from '../components/form/useFormError';
 import LoadingButton from '../components/LoadingButton';
-import { useRegisterMutation } from '../generated/graphql';
+import { useRegisterMutation } from '../graphql/generated/graphql';
 import { updateMe } from '../graphql/update/updateMe';
+import { useUserState } from '../store/user';
 
 interface Props {
   //
@@ -18,11 +19,13 @@ const initialValues = { username: '', email: '', password: '' };
 const Register: NextPage<Props> = () => {
   const router = useRouter();
   const { error, onError, resetError } = useFormError();
+  const [_, setUser] = useUserState();
 
   const [register, { loading }] = useRegisterMutation({
     update(proxy, { data }) {
       resetError();
       updateMe({ proxy, data: data?.register });
+      setUser(data?.register);
       router.push('/');
     },
     onError,

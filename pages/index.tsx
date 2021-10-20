@@ -1,17 +1,18 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import { PostsDocument, useMeQuery, usePostsQuery } from '../generated/graphql';
+import { PostsDocument, usePostsQuery } from '../graphql/generated/graphql';
 import { client } from '../lib/graphql';
+import { useUserState } from '../store/user';
 
 const Home: NextPage<{}> = () => {
   const { data } = usePostsQuery();
-  const { data: user } = useMeQuery();
+  const [user] = useUserState();
 
   return (
     <div className=''>
       <div className='flex justify-between'>
         <h1 className='text-3xl md:text-4xl font-medium'>Posts</h1>
-        {user?.me && (
+        {user && (
           <Link href='/posts/create' passHref>
             <a className='btn outline'>Create post</a>
           </Link>

@@ -1,8 +1,9 @@
 import { SearchIcon, SunIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { useLogoutMutation, useMeQuery } from '../../generated/graphql';
+import { useLogoutMutation, useMeQuery } from '../../graphql/generated/graphql';
 import { updateMe } from '../../graphql/update/updateMe';
+import { useUserState } from '../../store/user';
 import IconButton from '../IconButton';
 import LoadingButton from '../LoadingButton';
 
@@ -32,10 +33,16 @@ const Header: React.FC<Props> = () => {
   };
 
   const { data, loading } = useMeQuery();
+  const [user, setUser] = useUserState();
+
+  useEffect(() => {
+    setUser(data?.me);
+  }, [data?.me, setUser]);
 
   const [logout, { loading: loggingOut }] = useLogoutMutation({
     update(proxy) {
       updateMe({ proxy, data: null });
+      setUser(null);
     },
   });
 
@@ -68,9 +75,9 @@ const Header: React.FC<Props> = () => {
         <div className='flex items-center'>
           {!loading && (
             <div className='flex space-x-3 items-center md:space-x-6'>
-              {data?.me ? (
+              {user ? (
                 <>
-                  <p>{data.me.username}</p>
+                  <p>{user.username}</p>
                   <LoadingButton
                     onClick={() => logout()}
                     loading={loggingOut}

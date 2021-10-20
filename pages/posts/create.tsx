@@ -7,7 +7,10 @@ import FormWrapper from '../../components/form/FormWrapper';
 import TextField from '../../components/form/TextField';
 import useFormError from '../../components/form/useFormError';
 import LoadingButton from '../../components/LoadingButton';
-import { PostsDocument, useCreatePostMutation } from '../../generated/graphql';
+import {
+  PostsDocument,
+  useCreatePostMutation,
+} from '../../graphql/generated/graphql';
 
 const initialValues = { title: '', body: '' };
 

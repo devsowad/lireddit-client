@@ -1,5 +1,5 @@
 import { ApolloCache } from '@apollo/client';
-import { MeDocument, MeQuery } from '../../generated/graphql';
+import { MeDocument, MeQuery } from '../generated/graphql';
 
 type DataType = {
   id: string;

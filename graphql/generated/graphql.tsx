@@ -81,7 +81,7 @@ export type MutationUpdatePostArgs = {
 
 export type Post = {
   __typename?: 'Post';
-  author?: Maybe<User>;
+  author: User;
   body: Scalars['String'];
   createdAt: Scalars['String'];
   id: Scalars['String'];
@@ -112,6 +112,7 @@ export type User = {
   createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['String'];
+  posts?: Maybe<Array<Post>>;
   updatedAt: Scalars['String'];
   username: Scalars['String'];
 };
@@ -222,14 +223,10 @@ export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePas
 export const CreatePostDocument = gql`
     mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
-    id
-    title
-    body
-    createdAt
-    updatedAt
+    ...RegularPost
   }
 }
-    `;
+    ${RegularPostFragmentDoc}`;
 export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
 
 /**

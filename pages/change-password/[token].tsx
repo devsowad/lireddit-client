@@ -7,7 +7,7 @@ import FormWrapper from '../../components/form/FormWrapper';
 import TextField from '../../components/form/TextField';
 import useFormError from '../../components/form/useFormError';
 import LoadingButton from '../../components/LoadingButton';
-import { useChangePasswordMutation } from '../../generated/graphql';
+import { useChangePasswordMutation } from '../../graphql/generated/graphql';
 import { updateMe } from '../../graphql/update/updateMe';
 import Link from 'next/link';
 
