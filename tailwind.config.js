@@ -9,6 +9,15 @@ module.exports = {
       fontFamily: {
         sans: ['Poppins', ...defaultTheme.fontFamily.sans],
       },
+      animation: {
+        'slide-in': 'slide-in 0.1s linear',
+      },
+      keyframes: {
+        'slide-in': {
+          '0%': { transform: 'translateY(-75px)' },
+          '100%': { transform: 'translateY(0)' },
+        },
+      },
     },
   },
   variants: {

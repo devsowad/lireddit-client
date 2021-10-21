@@ -28,7 +28,7 @@ export default class MyDocument extends Document {
             rel='stylesheet'
           />
         </Head>
-        <body className='font-sans bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200'>
+        <body className='font-sans body-color'>
           <Main />
           <NextScript />
         </body>

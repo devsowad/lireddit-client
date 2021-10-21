@@ -50,10 +50,9 @@ const Header: React.FC<Props> = () => {
     <div
       className={`
        ${
-         sticky
-           ? 'shadow-lg sticky top-0 bg-white animate-slideIn'
-           : 'animate-slideOut'
-       } border-b dark:border-gray-600
+         sticky &&
+         'shadow-lg sticky top-0 bg-white dark:bg-gray-500 animate-slide-in'
+       } border-b dark:border-gray-600 z-50
           `}
     >
       <div className='flex items-center justify-between w-full container mx-auto py-2 px-2'>
@@ -61,12 +60,12 @@ const Header: React.FC<Props> = () => {
           <Link href='/' passHref>
             <a className='text-3xl mr-2 font-semibold'>LiReddit</a>
           </Link>
-          <div className='hidden md:flex items-center ml-2 group px-2 bg-gray-200 dark:bg-gray-600 rounded-xl focus-within:ring-2'>
+          <div className='hidden md:flex items-center ml-2 group px-2 bg-gray-200 dark:bg-gray-600 rounded-3xl focus-within:ring-2 focus-within:rounded transition-all ease-out'>
             <SearchIcon className='w-5 text-gray-400 group-focus-within:text-gray-700 dark:text-gray-400 dark:group-focus-within:text-gray-200' />
             <input
-              className='bg-transparent no-transition focus:outline-none text-gray-800 dark:text-gray-300 px-3 py-2 border-0 focus:borer-0 focus:ring-0'
+              className='bg-transparent no-transition focus:outline-none text-gray-800 dark:text-gray-300 px-3 py-2 border-0 focus:borer-0 focus:ring-0 dark:placeholder-gray-400 shadow-none rounded-3xl'
               type='text'
-              placeholder='Search Facebook'
+              placeholder='Search...'
             />
           </div>
           <IconButton icon={SearchIcon} className='md:hidden' />

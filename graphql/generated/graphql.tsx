@@ -117,7 +117,7 @@ export type User = {
   username: Scalars['String'];
 };
 
-export type RegularPostFragment = { __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string };
+export type RegularPostFragment = { __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } };
 
 export type RegularUserFragment = { __typename?: 'User', id: string, username: string, email: string };
 
@@ -133,7 +133,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -166,10 +166,17 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, username: string, email: string } };
 
+export type PostQueryVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } } | null | undefined };
+
 export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string }> };
+export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } }> };
 
 export const RegularPostFragmentDoc = gql`
     fragment RegularPost on Post {
@@ -178,6 +185,9 @@ export const RegularPostFragmentDoc = gql`
   body
   createdAt
   updatedAt
+  author {
+    username
+  }
 }
     `;
 export const RegularUserFragmentDoc = gql`
@@ -414,6 +424,41 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const PostDocument = gql`
+    query post($postId: String!) {
+  post(id: $postId) {
+    ...RegularPost
+  }
+}
+    ${RegularPostFragmentDoc}`;
+
+/**
+ * __usePostQuery__
+ *
+ * To run a query within a React component, call `usePostQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function usePostQuery(baseOptions: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+      }
+export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQuery, PostQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+        }
+export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
+export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
+export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
 export const PostsDocument = gql`
     query Posts {
   posts {

@@ -25,7 +25,6 @@ function createApolloClient() {
 
 export function initializeApollo(initialState = null) {
   const _apolloClient = apolloClient ?? createApolloClient();
-
   if (initialState) {
     _apolloClient.cache.restore(initialState);
   }
@@ -35,8 +34,6 @@ export function initializeApollo(initialState = null) {
 
   return apolloClient;
 }
-
-export const client = initializeApollo();
 
 export function useApollo(initialState: any) {
   const store = useMemo(() => initializeApollo(initialState), [initialState]);
