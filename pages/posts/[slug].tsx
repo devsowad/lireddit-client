@@ -13,7 +13,7 @@ interface Props {
 const Post: NextPage<Props> = () => {
   const router = useRouter();
   const { data } = usePostQuery({
-    variables: { postId: router.query.id as string },
+    variables: { slug: router.query.slug as string },
   });
 
   return (
@@ -89,7 +89,7 @@ export default Post;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const client = initializeApollo();
-  await client.query({ query: PostDocument, variables: { postId: query.id } });
+  await client.query({ query: PostDocument, variables: { slug: query.slug } });
 
   return { props: { initialApolloState: client.cache.extract() } };
 };

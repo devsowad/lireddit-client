@@ -1,5 +1,5 @@
-query post($postId: String!) {
-  post(id: $postId) {
+query post($slug: String!) {
+  post(slug: $slug) {
     ...RegularPost
   }
 }

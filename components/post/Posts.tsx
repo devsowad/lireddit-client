@@ -20,7 +20,7 @@ const Posts: React.FC<Props> = ({ data, loading, handleOnEnter }) => {
           key={post.id}
           className='shadow-lg rounded-lg hover:shadow-2xl content-bg transition'
         >
-          <Link href={`/posts/${post.id}`} passHref>
+          <Link href={`/posts/${post.slug}`} passHref>
             <a>
               <div className='relative w-full h-[250px]'>
                 <Image
@@ -52,7 +52,7 @@ const Posts: React.FC<Props> = ({ data, loading, handleOnEnter }) => {
                 </Moment>
               </div>
             </div>
-            <Link href={`/posts/${post.id}`} passHref>
+            <Link href={`/posts/${post.slug}`} passHref>
               <a className='text-xl font-medium'>{post.title}</a>
             </Link>
             <p className='text-sm font-medium'>

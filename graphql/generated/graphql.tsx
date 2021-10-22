@@ -91,6 +91,7 @@ export type Post = {
   body: Scalars['String'];
   createdAt: Scalars['String'];
   id: Scalars['String'];
+  slug: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -104,7 +105,7 @@ export type Query = {
 
 
 export type QueryPostArgs = {
-  id: Scalars['String'];
+  slug: Scalars['String'];
 };
 
 
@@ -129,7 +130,7 @@ export type User = {
   username: Scalars['String'];
 };
 
-export type RegularPostFragment = { __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } };
+export type RegularPostFragment = { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } };
 
 export type RegularUserFragment = { __typename?: 'User', id: string, username: string, email: string };
 
@@ -145,7 +146,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -179,11 +180,11 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, username: string, email: string } };
 
 export type PostQueryVariables = Exact<{
-  postId: Scalars['String'];
+  slug: Scalars['String'];
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } } | null | undefined };
+export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } } | null | undefined };
 
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -191,12 +192,13 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPost', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: string, title: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPost', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } }> } };
 
 export const RegularPostFragmentDoc = gql`
     fragment RegularPost on Post {
   id
   title
+  slug
   body
   createdAt
   updatedAt
@@ -440,8 +442,8 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PostDocument = gql`
-    query post($postId: String!) {
-  post(id: $postId) {
+    query post($slug: String!) {
+  post(slug: $slug) {
     ...RegularPost
   }
 }
@@ -459,7 +461,7 @@ export const PostDocument = gql`
  * @example
  * const { data, loading, error } = usePostQuery({
  *   variables: {
- *      postId: // value for 'postId'
+ *      slug: // value for 'slug'
  *   },
  * });
  */
