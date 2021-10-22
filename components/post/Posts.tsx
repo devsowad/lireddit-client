@@ -2,16 +2,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import Moment from 'react-moment';
+import { Waypoint } from 'react-waypoint';
 import { PostsQuery } from '../../graphql/generated/graphql';
+import PostSkeleton from './PostSkeleton';
 
 interface Props {
   data: PostsQuery;
+  loading: boolean;
+  handleOnEnter: () => void;
 }
 
-const Posts: React.FC<Props> = ({ data }) => {
+const Posts: React.FC<Props> = ({ data, loading, handleOnEnter }) => {
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-      {data.posts.map((post) => (
+      {data.posts.posts.map((post) => (
         <div
           key={post.id}
           className='shadow-lg rounded-lg hover:shadow-2xl content-bg transition'
@@ -76,6 +80,11 @@ const Posts: React.FC<Props> = ({ data }) => {
           </div>
         </div>
       ))}
+      {loading ? (
+        [75, 150, 300, 700].map((d) => <PostSkeleton key={d} delay={d} />)
+      ) : (
+        <Waypoint onEnter={handleOnEnter} />
+      )}
     </div>
   );
 };
