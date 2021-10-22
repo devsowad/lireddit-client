@@ -1,7 +1,9 @@
 import { EmojiSadIcon } from '@heroicons/react/solid';
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import Posts from '../components/post/Posts';
+import { Waypoint } from 'react-waypoint';
+import Post from '../components/post/Post';
+import PostSkeleton from '../components/post/PostSkeleton';
 import { PostsDocument, usePostsQuery } from '../graphql/generated/graphql';
 import { initializeApollo } from '../lib/graphql';
 import { useUserState } from '../store/user';
@@ -41,9 +43,16 @@ const Home: NextPage<{}> = () => {
           </Link>
         )}
       </div>
-      {data?.posts && (
-        <Posts data={data} loading={loading} handleOnEnter={handleOnEnter} />
-      )}
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+        {data?.posts.posts.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
+        {loading ? (
+          [75, 150, 300, 700].map((d) => <PostSkeleton key={d} delay={d} />)
+        ) : (
+          <Waypoint onEnter={handleOnEnter} />
+        )}
+      </div>
       {!data?.posts.hasMore && (
         <div className='flex flex-col items-center mt-8'>
           <EmojiSadIcon className='w-24 gray-400' />
@@ -56,9 +65,9 @@ const Home: NextPage<{}> = () => {
 
 export default Home;
 
-export const getServerSideProps = async () => {
-  const client = initializeApollo();
-  await client.query({ query: PostsDocument, variables: { limit: 10 } });
+// export const getServerSideProps = async () => {
+//   const client = initializeApollo();
+//   await client.query({ query: PostsDocument, variables: { limit: 10 } });
 
-  return { props: { initialApolloState: client.cache.extract() } };
-};
+//   return { props: { initialApolloState: client.cache.extract() } };
+// };

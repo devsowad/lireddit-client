@@ -23,6 +23,7 @@ const CreatePost: NextPage<{}> = () => {
       const cachePosts = proxy.readQuery({
         query: PostsDocument,
       }) as { posts: any } | null;
+
       if (cachePosts?.posts) {
         const posts = [data?.createPost, ...cachePosts.posts];
         proxy.writeQuery({ query: PostsDocument, data: { posts } });

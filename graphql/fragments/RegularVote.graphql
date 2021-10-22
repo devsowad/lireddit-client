@@ -1,0 +1,5 @@
+fragment RegularVote on Vote {
+  author {
+    username
+  }
+}

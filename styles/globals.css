@@ -70,4 +70,16 @@
   .gray-400 {
     @apply text-gray-700 dark:text-gray-400;
   }
+
+  .vote-button {
+    @apply inline-flex items-center px-2.5 py-1.5 hover:bg-gray-300 dark:hover:bg-gray-800 rounded-md transition disabled:opacity-25 disabled:cursor-not-allowed;
+  }
+
+  .vote-button.voted {
+    @apply bg-indigo-300 dark:bg-gray-800;
+  }
+
+  .vote-button svg {
+    @apply mr-1 w-5 text-indigo-600 dark:text-indigo-400;
+  }
 }

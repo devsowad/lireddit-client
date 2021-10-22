@@ -1,0 +1,5 @@
+mutation Vote($liked: Boolean!, $postId: String!) {
+  vote(liked: $liked, postId: $postId) {
+    ...RegularVote
+  }
+}

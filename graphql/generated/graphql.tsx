@@ -40,6 +40,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   register: User;
   updatePost: Post;
+  vote: Vote;
 };
 
 
@@ -79,6 +80,12 @@ export type MutationUpdatePostArgs = {
   title?: Maybe<Scalars['String']>;
 };
 
+
+export type MutationVoteArgs = {
+  liked: Scalars['Boolean'];
+  postId: Scalars['String'];
+};
+
 export type PaginatedPost = {
   __typename?: 'PaginatedPost';
   hasMore: Scalars['Boolean'];
@@ -90,7 +97,9 @@ export type Post = {
   author: User;
   body: Scalars['String'];
   createdAt: Scalars['String'];
+  deslikes: Array<Vote>;
   id: Scalars['String'];
+  likes: Array<Vote>;
   slug: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -130,9 +139,20 @@ export type User = {
   username: Scalars['String'];
 };
 
-export type RegularPostFragment = { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } };
+export type Vote = {
+  __typename?: 'Vote';
+  author: User;
+  createdAt: Scalars['String'];
+  id: Scalars['String'];
+  liked: Scalars['Boolean'];
+  updatedAt: Scalars['String'];
+};
+
+export type RegularPostFragment = { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string }, likes: Array<{ __typename?: 'Vote', author: { __typename?: 'User', username: string } }>, deslikes: Array<{ __typename?: 'Vote', author: { __typename?: 'User', username: string } }> };
 
 export type RegularUserFragment = { __typename?: 'User', id: string, username: string, email: string };
+
+export type RegularVoteFragment = { __typename?: 'Vote', author: { __typename?: 'User', username: string } };
 
 export type ChangePasswordMutationVariables = Exact<{
   input: ChangePasswordInput;
@@ -146,7 +166,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string }, likes: Array<{ __typename?: 'Vote', author: { __typename?: 'User', username: string } }>, deslikes: Array<{ __typename?: 'Vote', author: { __typename?: 'User', username: string } }> } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -174,6 +194,14 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', id: string, username: string, email: string } };
 
+export type VoteMutationVariables = Exact<{
+  liked: Scalars['Boolean'];
+  postId: Scalars['String'];
+}>;
+
+
+export type VoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'Vote', author: { __typename?: 'User', username: string } } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -184,7 +212,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } } | null | undefined };
+export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string }, likes: Array<{ __typename?: 'Vote', author: { __typename?: 'User', username: string } }>, deslikes: Array<{ __typename?: 'Vote', author: { __typename?: 'User', username: string } }> } | null | undefined };
 
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -192,8 +220,15 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPost', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string } }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPost', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: string, title: string, slug: string, body: string, createdAt: string, updatedAt: string, author: { __typename?: 'User', username: string }, likes: Array<{ __typename?: 'Vote', author: { __typename?: 'User', username: string } }>, deslikes: Array<{ __typename?: 'Vote', author: { __typename?: 'User', username: string } }> }> } };
 
+export const RegularVoteFragmentDoc = gql`
+    fragment RegularVote on Vote {
+  author {
+    username
+  }
+}
+    `;
 export const RegularPostFragmentDoc = gql`
     fragment RegularPost on Post {
   id
@@ -205,8 +240,14 @@ export const RegularPostFragmentDoc = gql`
   author {
     username
   }
+  likes {
+    ...RegularVote
+  }
+  deslikes {
+    ...RegularVote
+  }
 }
-    `;
+    ${RegularVoteFragmentDoc}`;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
@@ -407,6 +448,40 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const VoteDocument = gql`
+    mutation Vote($liked: Boolean!, $postId: String!) {
+  vote(liked: $liked, postId: $postId) {
+    ...RegularVote
+  }
+}
+    ${RegularVoteFragmentDoc}`;
+export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationVariables>;
+
+/**
+ * __useVoteMutation__
+ *
+ * To run a mutation, you first call `useVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [voteMutation, { data, loading, error }] = useVoteMutation({
+ *   variables: {
+ *      liked: // value for 'liked'
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, options);
+      }
+export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
+export type VoteMutationResult = Apollo.MutationResult<VoteMutation>;
+export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {
