@@ -1,13 +1,14 @@
-import { ChatAlt2Icon, ThumbUpIcon } from '@heroicons/react/solid';
+import { ChatAlt2Icon, PencilIcon } from '@heroicons/react/solid';
 import type { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import Image from 'next/image';
+import Link from 'next/link';
 import Moment from 'react-moment';
-import Delete from '../../components/post/Delete';
-import Vote from '../../components/post/Vote';
-import { PostDocument, usePostQuery } from '../../graphql/generated/graphql';
-import { initializeApollo } from '../../lib/graphql';
-import { useUserState } from '../../store/user';
+import Delete from '../../../components/post/Delete';
+import Vote from '../../../components/post/Vote';
+import { PostDocument, usePostQuery } from '../../../graphql/generated/graphql';
+import { initializeApollo } from '../../../lib/graphql';
+import { useUserState } from '../../../store/user';
 
 interface Props {
   //
@@ -54,10 +55,6 @@ const Post: NextPage<Props> = () => {
             </div>
             <div className='flex items-center justify-between my-4'>
               <div className='flex items-center text-md'>
-                <ThumbUpIcon className='mr-1 w-5 text-indigo-600' />
-                <p>
-                  {/* {post.likesCount} like{post.likesCount > 1 && 's'} */}1
-                </p>
                 <ChatAlt2Icon className='ml-2 mr-1 w-5 text-indigo-600' />
                 <p>
                   {/* {post.commentsCount} comment{post.commentsCount > 1 && 's'} */}
@@ -66,6 +63,17 @@ const Post: NextPage<Props> = () => {
               </div>
               <div className='flex items-center space-x-2'>
                 {user && <Vote post={data.post} user={user} />}
+                {user?.username === data.post.author.username && (
+                  <Link
+                    href='/posts/[slug]/edit'
+                    as={`/posts/${data.post.slug}/edit`}
+                    passHref
+                  >
+                    <a className='w-10 h-10 rounded-full transition hover:bg-gray-200 dark:hover:bg-gray-500 inline-flex items-center justify-center'>
+                      <PencilIcon className='w-6' />
+                    </a>
+                  </Link>
+                )}
                 {user?.username === data.post.author.username && (
                   <Delete postId={data.post.id} />
                 )}
