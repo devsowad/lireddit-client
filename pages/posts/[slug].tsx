@@ -3,6 +3,7 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import Image from 'next/image';
 import Moment from 'react-moment';
+import Delete from '../../components/post/Delete';
 import Vote from '../../components/post/Vote';
 import { PostDocument, usePostQuery } from '../../graphql/generated/graphql';
 import { initializeApollo } from '../../lib/graphql';
@@ -65,6 +66,9 @@ const Post: NextPage<Props> = () => {
               </div>
               <div className='flex items-center space-x-2'>
                 {user && <Vote post={data.post} user={user} />}
+                {user?.username === data.post.author.username && (
+                  <Delete postId={data.post.id} />
+                )}
               </div>
             </div>
             <p className='text-xl sm:text-3xl font-medium'>{data.post.title}</p>

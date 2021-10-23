@@ -269,8 +269,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "Post",
+                "kind": "SCALAR",
+                "name": "Boolean",
                 "ofType": null
               }
             },
