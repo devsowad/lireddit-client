@@ -1,4 +1,6 @@
 fragment RegularVote on Vote {
+  id
+  liked
   author {
     username
   }

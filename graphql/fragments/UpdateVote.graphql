@@ -1,0 +1,16 @@
+fragment VotedPost on Post {
+  likes {
+    id
+    liked
+    author {
+      username
+    }
+  }
+  deslikes {
+    id
+    liked
+    author {
+      username
+    }
+  }
+}

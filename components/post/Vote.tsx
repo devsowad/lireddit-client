@@ -1,38 +1,37 @@
 import { ThumbDownIcon, ThumbUpIcon } from '@heroicons/react/solid';
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  PostsDocument,
   RegularPostFragment,
   useVoteMutation,
+  VotedPostFragmentDoc,
 } from '../../graphql/generated/graphql';
-import { useUserState } from '../../store/user';
+import { User, useUserState } from '../../store/user';
 
-const Vote: React.FC<{ post: RegularPostFragment }> = ({ post }) => {
-  const [user] = useUserState();
-  const [isLiked, setIsLiked] = useState(false);
+const Vote: React.FC<{
+  post: RegularPostFragment;
+  user: User | null | undefined;
+}> = ({ post, user }) => {
   const voteByUser = (type: 'likes' | 'deslikes') => {
     return post[type].find((l) => l.author.username === user?.username);
   };
 
   const [vote, { loading }] = useVoteMutation({
-    //   liked => post->id === id
     update(proxy, { data }) {
-      console.log(proxy.readQuery({ query: PostsDocument }));
-      //   const cachedPost = proxy.readQuery({ query: PostsDocument }) as {
-      //     posts: RegularPostFragment[];
-      //   } | null;
-      //   const likedPost = cachedPost?.posts.find((p) => p.id === post.id);
-      //   console.log(cachedPost);
+      proxy.writeFragment({
+        id: 'Post:' + post.id,
+        fragment: VotedPostFragmentDoc,
+        data: {
+          likes: data?.vote.likes,
+          deslikes: data?.vote.deslikes,
+        },
+      });
     },
   });
 
   return (
     <>
       <button
-        onClick={() => {
-          //   setIsLiked(true);
-          vote({ variables: { liked: true, postId: post.id } });
-        }}
+        onClick={() => vote({ variables: { liked: true, postId: post.id } })}
         disabled={loading}
         className={`${voteByUser('likes') ? 'voted' : ''} vote-button`}
       >
@@ -41,10 +40,7 @@ const Vote: React.FC<{ post: RegularPostFragment }> = ({ post }) => {
       </button>
       <button
         disabled={loading}
-        onClick={() => {
-          //   setIsLiked(false);
-          vote({ variables: { liked: false, postId: post.id } });
-        }}
+        onClick={() => vote({ variables: { liked: false, postId: post.id } })}
         className={`${voteByUser('deslikes') ? 'voted' : ''} vote-button`}
       >
         <ThumbDownIcon />

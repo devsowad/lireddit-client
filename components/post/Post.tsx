@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import Moment from 'react-moment';
 import { RegularPostFragment } from '../../graphql/generated/graphql';
+import { useUserState } from '../../store/user';
 import Vote from './Vote';
 
 interface Props {
@@ -10,6 +11,8 @@ interface Props {
 }
 
 const Post: React.FC<Props> = ({ post }) => {
+  const [user] = useUserState();
+
   return (
     <div className='shadow-lg rounded-lg hover:shadow-2xl content-bg transition'>
       <Link href={`/posts/${post.slug}`} passHref>
@@ -54,17 +57,12 @@ const Post: React.FC<Props> = ({ post }) => {
         </p>
         <div className='flex items-center justify-between'>
           <div className='flex items-center text-md space-x-2'>
-            <Vote post={post} />
+            {user && <Vote post={post} user={user} />}
             {/* <ChatAlt2Icon className='ml-2 mr-1 w-5 text-indigo-600' /> */}
             {/* <p>
                   {post.commentsCount} comment{post.commentsCount > 1 && 's'}
                 </p> */}
           </div>
-          {/* <LikeButton
-                postId={post.id}
-                likes={post.likes}
-                username={user?.username}
-              /> */}
         </div>
       </div>
     </div>

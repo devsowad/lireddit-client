@@ -3,8 +3,10 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import Image from 'next/image';
 import Moment from 'react-moment';
+import Vote from '../../components/post/Vote';
 import { PostDocument, usePostQuery } from '../../graphql/generated/graphql';
 import { initializeApollo } from '../../lib/graphql';
+import { useUserState } from '../../store/user';
 
 interface Props {
   //
@@ -12,6 +14,7 @@ interface Props {
 
 const Post: NextPage<Props> = () => {
   const router = useRouter();
+  const [user] = useUserState();
   const { data } = usePostQuery({
     variables: { slug: router.query.slug as string },
   });
@@ -61,15 +64,7 @@ const Post: NextPage<Props> = () => {
                 </p>
               </div>
               <div className='flex items-center space-x-2'>
-                {/* <LikeButton
-                  postId={post.id}
-                  likes={post.likes}
-                  username={user?.username}
-                  large
-                /> */}
-                {/* {post.username === user?.username && (
-                  <DeleteButton postId={post.id} />
-                )} */}
+                {user && <Vote post={data.post} user={user} />}
               </div>
             </div>
             <p className='text-xl sm:text-3xl font-medium'>{data.post.title}</p>

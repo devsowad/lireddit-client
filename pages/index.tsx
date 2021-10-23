@@ -65,9 +65,9 @@ const Home: NextPage<{}> = () => {
 
 export default Home;
 
-// export const getServerSideProps = async () => {
-//   const client = initializeApollo();
-//   await client.query({ query: PostsDocument, variables: { limit: 10 } });
+export const getServerSideProps = async () => {
+  const client = initializeApollo();
+  await client.query({ query: PostsDocument, variables: { limit: 10 } });
 
-//   return { props: { initialApolloState: client.cache.extract() } };
-// };
+  return { props: { initialApolloState: client.cache.extract() } };
+};
