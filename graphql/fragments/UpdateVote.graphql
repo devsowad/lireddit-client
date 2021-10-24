@@ -1,15 +1,8 @@
 fragment VotedPost on Post {
-  likes {
+  votes {
     id
     liked
-    author {
-      username
-    }
-  }
-  deslikes {
-    id
-    liked
-    author {
+    user {
       username
     }
   }

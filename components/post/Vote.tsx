@@ -1,19 +1,32 @@
 import { ThumbDownIcon, ThumbUpIcon } from '@heroicons/react/solid';
-import React from 'react';
+import { useRouter } from 'next/dist/client/router';
+import React, { useMemo } from 'react';
 import {
   RegularPostFragment,
   useVoteMutation,
   VotedPostFragmentDoc,
 } from '../../graphql/generated/graphql';
-import { User, useUserState } from '../../store/user';
+import { User } from '../../store/user';
 
 const Vote: React.FC<{
   post: RegularPostFragment;
   user: User | null | undefined;
 }> = ({ post, user }) => {
-  const voteByUser = (type: 'likes' | 'deslikes') => {
-    return post[type].find((l) => l.author.username === user?.username);
+  const router = useRouter();
+
+  const voteByUser = (liked: boolean) => {
+    return liked
+      ? likes?.find((l) => l.user.username === user?.username)
+      : deslikes?.find((l) => l.user.username === user?.username);
   };
+
+  const likes = useMemo(() => {
+    return post.votes?.filter((v) => v.liked === true);
+  }, [post]);
+
+  const deslikes = useMemo(() => {
+    return post.votes?.filter((v) => v.liked === false);
+  }, [post]);
 
   const [vote, { loading }] = useVoteMutation({
     update(proxy, { data }) {
@@ -21,30 +34,37 @@ const Vote: React.FC<{
         id: 'Post:' + post.id,
         fragment: VotedPostFragmentDoc,
         data: {
-          likes: data?.vote.likes,
-          deslikes: data?.vote.deslikes,
+          votes: data?.vote,
         },
       });
     },
   });
 
+  const handleVote = (liked: boolean) => {
+    if (user) {
+      vote({ variables: { liked, postId: post.id } });
+    } else {
+      router.push('/login');
+    }
+  };
+
   return (
     <>
       <button
-        onClick={() => vote({ variables: { liked: true, postId: post.id } })}
+        onClick={() => handleVote(true)}
         disabled={loading}
-        className={`${voteByUser('likes') ? 'voted' : ''} vote-button`}
+        className={`${voteByUser(true) ? 'voted' : ''} vote-button`}
       >
         <ThumbUpIcon />
-        {post.likes.length}
+        {likes ? likes.length : 0}
       </button>
       <button
         disabled={loading}
-        onClick={() => vote({ variables: { liked: false, postId: post.id } })}
-        className={`${voteByUser('deslikes') ? 'voted' : ''} vote-button`}
+        onClick={() => handleVote(false)}
+        className={`${voteByUser(false) ? 'voted' : ''} vote-button`}
       >
         <ThumbDownIcon />
-        {post.deslikes.length}
+        {deslikes ? deslikes.length : 0}
       </button>
     </>
   );

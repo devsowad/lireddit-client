@@ -1,10 +1,5 @@
 mutation Vote($liked: Boolean!, $postId: String!) {
   vote(liked: $liked, postId: $postId) {
-    likes {
-      ...RegularVote
-    }
-    deslikes {
-      ...RegularVote
-    }
+    ...RegularVote
   }
 }

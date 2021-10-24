@@ -57,7 +57,7 @@ const Post: React.FC<Props> = ({ post }) => {
         </p>
         <div className='flex items-center justify-between'>
           <div className='flex items-center text-md space-x-2'>
-            {user && <Vote post={post} user={user} />}
+            <Vote post={post} user={user} />
             {/* <ChatAlt2Icon className='ml-2 mr-1 w-5 text-indigo-600' /> */}
             {/* <p>
                   {post.commentsCount} comment{post.commentsCount > 1 && 's'}
