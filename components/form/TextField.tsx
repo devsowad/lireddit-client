@@ -1,14 +1,22 @@
 import { useField } from 'formik';
-import React, { InputHTMLAttributes } from 'react';
+import React, { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
-type Props = InputHTMLAttributes<HTMLInputElement> & {
-  name: string;
-};
+type Props = InputHTMLAttributes<HTMLInputElement> &
+  TextareaHTMLAttributes<HTMLTextAreaElement> & {
+    name: string;
+    component?: string;
+  };
 
 const TextField: React.FC<Props> = (props) => {
   const [field, { error }] = useField(props);
 
-  const { name, type = 'text', title, placeholder } = props;
+  const {
+    name,
+    type = 'text',
+    title,
+    placeholder,
+    component: Component = 'input',
+  } = props;
 
   return (
     <div className='group transition'>
@@ -18,7 +26,7 @@ const TextField: React.FC<Props> = (props) => {
       >
         {title ? <p>{title}</p> : <p className='capitalize'>{name}</p>}
       </label>
-      <input
+      <Component
         {...field}
         id={name}
         type={type}

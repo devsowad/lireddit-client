@@ -3,6 +3,7 @@ fragment RegularPost on Post {
   title
   slug
   body
+  imageUrl
   createdAt
   updatedAt
   author {

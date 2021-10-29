@@ -48,7 +48,7 @@
     @apply cursor-default;
   }
 
-  .btn:not(.loading) svg {
+  .btn:not(.loading) > svg {
     display: none;
   }
   .btn.loading .text {

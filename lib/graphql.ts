@@ -4,12 +4,12 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client';
 import { useMemo } from 'react';
+import { createUploadLink } from 'apollo-upload-client';
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
 function createIsomorphLink() {
-  const { HttpLink } = require('@apollo/client/link/http');
-  return new HttpLink({
+  return createUploadLink({
     uri: 'http://localhost:5000/graphql',
     credentials: 'include',
   });

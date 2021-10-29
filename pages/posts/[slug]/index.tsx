@@ -27,7 +27,7 @@ const Post: NextPage<Props> = () => {
         <div className='rounded-md shadow-2xl max-w-4xl mx-auto content-bg'>
           <div className='relative w-full h-[500px]'>
             <Image
-              src='https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=800'
+              src={data.post.imageUrl}
               alt={data.post.title}
               layout='fill'
               objectFit='cover'

@@ -19,7 +19,7 @@ const Post: React.FC<Props> = ({ post }) => {
         <a>
           <div className='relative w-full h-[250px]'>
             <Image
-              src='https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+              src={post.imageUrl}
               alt={post.title}
               layout='fill'
               objectFit='cover'
