@@ -4,9 +4,15 @@ import { useRouter } from 'next/dist/client/router';
 import Image from 'next/image';
 import Link from 'next/link';
 import Moment from 'react-moment';
+import CommentForm from '../../../components/post/CommentForm';
+import Comments from '../../../components/post/Comments';
 import Delete from '../../../components/post/Delete';
 import Vote from '../../../components/post/Vote';
-import { PostDocument, usePostQuery } from '../../../graphql/generated/graphql';
+import {
+  PostDocument,
+  useCommentsQuery,
+  usePostQuery,
+} from '../../../graphql/generated/graphql';
 import { initializeApollo } from '../../../lib/graphql';
 import { useUserState } from '../../../store/user';
 
@@ -19,6 +25,10 @@ const Post: NextPage<Props> = () => {
   const [user] = useUserState();
   const { data } = usePostQuery({
     variables: { slug: router.query.slug as string },
+  });
+
+  const { data: comments } = useCommentsQuery({
+    variables: { postId: data?.post?.id!, limit: 10 },
   });
 
   return (
@@ -55,11 +65,8 @@ const Post: NextPage<Props> = () => {
             </div>
             <div className='flex items-center justify-between my-4'>
               <div className='flex items-center text-md'>
-                <ChatAlt2Icon className='ml-2 mr-1 w-5 text-indigo-600' />
-                <p>
-                  {/* {post.commentsCount} comment{post.commentsCount > 1 && 's'} */}
-                  1
-                </p>
+                <ChatAlt2Icon className='ml-2 mr-1 w-5 text-indigo-500' />
+                <p>{data.post.commentsCount}</p>
               </div>
               <div className='flex items-center space-x-2'>
                 {user && <Vote post={data.post} user={user} />}
@@ -84,7 +91,19 @@ const Post: NextPage<Props> = () => {
           </div>
           <hr />
           <div className='p-8'>
-            <h5 className='text-xl font-semibold'>Comments(1)</h5>
+            <h5 className='text-xl font-semibold'>
+              Comments({data.post.commentsCount})
+            </h5>
+            <CommentForm postId={data.post.id} />
+            <div className='space-y-4 mt-6'>
+              {comments && (
+                <Comments
+                  username={user?.username}
+                  postId={data.post.id}
+                  comments={comments}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}

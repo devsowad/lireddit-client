@@ -1,3 +1,4 @@
+import { ChatAlt2Icon } from '@heroicons/react/solid';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -58,10 +59,10 @@ const Post: React.FC<Props> = ({ post }) => {
         <div className='flex items-center justify-between'>
           <div className='flex items-center text-md space-x-2'>
             <Vote post={post} user={user} />
-            {/* <ChatAlt2Icon className='ml-2 mr-1 w-5 text-indigo-600' /> */}
-            {/* <p>
-                  {post.commentsCount} comment{post.commentsCount > 1 && 's'}
-                </p> */}
+          </div>
+          <div className='vote-button'>
+            <ChatAlt2Icon />
+            <p>{post.commentsCount}</p>
           </div>
         </div>
       </div>
